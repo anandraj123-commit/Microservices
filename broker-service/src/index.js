@@ -15,16 +15,16 @@ app.use(express.json());
 
 const subscribers = {
   PRODUCT_CREATED: [
-    "http://localhost:3003/events"
+    "http://inventory-service/events"
   ],
 
   ORDER_CREATED: [
-    "http://localhost:3003/events",
-    "http://localhost:3004/events"
+    "http://inventory-service/events",
+    "http://notification-service/events"
   ],
 
   INVENTORY_UPDATED: [
-    "http://localhost:3004/events"
+    "http://notification-service/events"
   ]
 };
 

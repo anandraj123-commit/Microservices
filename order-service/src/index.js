@@ -80,7 +80,7 @@ app.post("/orders", async (req, res) => {
     // Publish ORDER_CREATED event to broker
     try {
       const brokerResponse = await fetch(
-        "http://localhost:4000/publish",
+        "http://broker-service/publish",
         {
           method: "POST",
           headers: {

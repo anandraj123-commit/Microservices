@@ -40,7 +40,7 @@ function OrderForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3002/orders", {
+      const response = await fetch("http://3002/orders", {
         method: "POST",
 
         headers: {

@@ -188,7 +188,7 @@ app.post("/events", async (req, res) => {
 
     // Publish INVENTORY_UPDATED event
     try {
-      await fetch("http://localhost:4000/publish", {
+      await fetch("http://broker-service/publish", {
         method: "POST",
 
         headers: {

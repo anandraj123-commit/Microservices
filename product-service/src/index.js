@@ -14,6 +14,7 @@ app.get("/products", (req, res) => {
 });
 
 app.post("/products", (req, res) => {
+  console.log('product creation request received',req.body);
   const product = {
     id: Date.now().toString(),
     ...req.body,
