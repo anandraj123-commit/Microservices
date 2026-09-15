@@ -1,48 +1,144 @@
 services:
 
+  # =====================================================
+  # FRONTEND
+  # =====================================================
   frontend:
     build:
       context: ./frontend
     ports:
       - "5173:5173"
+    env_file:
+      - ./frontend/.env
     depends_on:
       - product-service
       - order-service
+      - inventory-service
+      - notification-service
 
+
+  # =====================================================
+  # PRODUCT SERVICE
+  # Database: MongoDB
+  # =====================================================
   product-service:
     build:
       context: ./product-service
     ports:
       - "3001:3001"
+    env_file:
+      - ./product-service/.env
     depends_on:
+      - product-mongodb
       - broker-service
 
+  product-mongodb:
+    image: mongo:latest
+    env_file:
+      - ./product-service/.db.env
+    ports:
+      - "27017:27017"
+    volumes:
+      - product-mongo-data:/data/db
+    restart: unless-stopped
+
+
+  # =====================================================
+  # ORDER SERVICE
+  # Database: PostgreSQL
+  # =====================================================
   order-service:
     build:
       context: ./order-service
     ports:
       - "3002:3002"
+    env_file:
+      - ./order-service/.env
     depends_on:
+      - order-postgres
       - broker-service
 
+  order-postgres:
+    image: postgres:latest
+    env_file:
+      - ./order-service/.db.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - order-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+
+  # =====================================================
+  # INVENTORY SERVICE
+  # Database: MySQL
+  # =====================================================
   inventory-service:
     build:
       context: ./inventory-service
     ports:
       - "3003:3003"
+    env_file:
+      - ./inventory-service/.env
     depends_on:
+      - inventory-mysql
       - broker-service
 
+  inventory-mysql:
+    image: mysql:latest
+    env_file:
+      - ./inventory-service/.db.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - inventory-mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+
+  # =====================================================
+  # NOTIFICATION SERVICE
+  # Database: MongoDB
+  # =====================================================
   notification-service:
     build:
       context: ./notification-service
     ports:
       - "3004:3004"
+    env_file:
+      - ./notification-service/.env
+    depends_on:
+      - notification-mongodb
 
+  notification-mongodb:
+    image: mongo:latest
+    env_file:
+      - ./notification-service/.db.env
+    ports:
+      - "27018:27017"
+    volumes:
+      - notification-mongo-data:/data/db
+    restart: unless-stopped
+
+
+  # =====================================================
+  # CUSTOM EVENT BROKER
+  # =====================================================
   broker-service:
     build:
       context: ./broker-service
     ports:
       - "4000:4000"
+    env_file:
+      - ./broker-service/.env
     depends_on:
       - notification-service
+
+
+# =======================================================
+# PERSISTENT DATABASE VOLUMES
+# =======================================================
+volumes:
+  product-mongo-data:
+  order-postgres-data:
+  inventory-mysql-data:
+  notification-mongo-data:
