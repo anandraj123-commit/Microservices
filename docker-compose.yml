@@ -1,0 +1,48 @@
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - product-service
+      - order-service
+
+  product-service:
+    build:
+      context: ./product-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - broker-service
+
+  order-service:
+    build:
+      context: ./order-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - broker-service
+
+  inventory-service:
+    build:
+      context: ./inventory-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - broker-service
+
+  notification-service:
+    build:
+      context: ./notification-service
+    ports:
+      - "3004:3004"
+
+  broker-service:
+    build:
+      context: ./broker-service
+    ports:
+      - "4000:4000"
+    depends_on:
+      - notification-service
