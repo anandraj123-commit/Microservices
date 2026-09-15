@@ -1,0 +1,42 @@
+services:
+
+  frontend:
+    image: anandraj604/frontend:1.0
+    ports:
+      - "5173:5173"
+    depends_on:
+      - product-service
+      - order-service
+
+  product-service:
+    image: anandraj604/product-service:1.0
+    ports:
+      - "3001:3001"
+    depends_on:
+      - broker-service
+
+  order-service:
+    image: anandraj604/order-service:1.0
+    ports:
+      - "3002:3002"
+    depends_on:
+      - broker-service
+
+  inventory-service:
+    image: anandraj604/inventory-service:1.0
+    ports:
+      - "3003:3003"
+    depends_on:
+      - broker-service
+
+  notification-service:
+    image: anandraj604/notification-service:1.0
+    ports:
+      - "3004:3004"
+
+  broker-service:
+    image: anandraj604/broker-service:1.0
+    ports:
+      - "4000:4000"
+    depends_on:
+      - notification-service
